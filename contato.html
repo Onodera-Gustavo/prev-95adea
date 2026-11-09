@@ -25,8 +25,8 @@
 <link rel="apple-touch-icon" href="assets/img/logo-m3bs-sigla-fundo-claro.png">
 <link rel="preload" href="assets/fonts/CormorantGaramond-600-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/Archivo-400-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/fonts/fonts.css?v=2026110904">
-<link rel="stylesheet" href="assets/styles.css?v=2026110904">
+<link rel="stylesheet" href="assets/fonts/fonts.css?v=2026110905">
+<link rel="stylesheet" href="assets/styles.css?v=2026110905">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "ContactPage", "name": "Contato", "url": "https://m3bs.com.br/contato", "about": {"@id": "https://m3bs.com.br/#organizacao"}, "inLanguage": "pt-BR"}</script>
 </head>
 <body>
@@ -140,15 +140,10 @@
         <small style="display:block;margin-top:12px;color:var(--ink-soft)">Ou escreva direto para <a href="mailto:contato@m3bs.com.br">contato@m3bs.com.br</a>.</small>
       </form>
     </div>
-    <div class="map-frame rv">
-      <div class="map-gate" id="mapa" data-src="https://www.google.com/maps?q=Avenida%20Paulista%2C%20854%2C%20Bela%20Vista%2C%20S%C3%A3o%20Paulo&output=embed">
-        <p><strong>Mapa da sede.</strong> Avenida Paulista, 854, Bela Vista, São Paulo. O mapa do Google só é carregado quando você pedir, para nenhum dado seu ir ao Google sem a sua escolha.</p>
-        <div class="map-acoes">
-          <button class="btn btn-burgundy" type="button" data-carrega-mapa>Carregar o mapa</button>
-          <a class="btn btn-outline-dark" href="https://www.google.com/maps/search/?api=1&query=Avenida+Paulista%2C+854%2C+Bela+Vista%2C+S%C3%A3o+Paulo" target="_blank" rel="noopener">Abrir no Google Maps</a>
-        </div>
-      </div>
+    <div class="map-frame rv" id="mapa">
+      <iframe src="https://www.google.com/maps?q=Avenida%20Paulista%2C%20854%2C%20Bela%20Vista%2C%20S%C3%A3o%20Paulo&output=embed" title="Mapa da sede do M3BS na Avenida Paulista, 854" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
+    <p class="map-acoes rv"><a class="btn btn-outline-dark" href="https://www.google.com/maps/search/?api=1&query=Avenida+Paulista%2C+854%2C+Bela+Vista%2C+S%C3%A3o+Paulo" target="_blank" rel="noopener">Abrir no Google Maps</a></p>
   </div>
 </section>
 
@@ -217,6 +212,6 @@
   </div>
 </div>
 
-<script src="assets/site.js?v=2026110904" defer></script>
+<script src="assets/site.js?v=2026110905" defer></script>
 </body>
 </html>

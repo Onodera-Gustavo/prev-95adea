@@ -116,21 +116,6 @@
     });
   });
 
-  /* Mapa do Google só com consentimento (clique) */
-  document.querySelectorAll('[data-carrega-mapa]').forEach(function(btn){
-    btn.addEventListener('click', function(){
-      var gate = btn.closest('.map-gate');
-      if(!gate) return;
-      var f = document.createElement('iframe');
-      f.src = gate.getAttribute('data-src');
-      f.title = 'Mapa da sede do M3BS na Avenida Paulista, 854';
-      f.loading = 'lazy';
-      f.referrerPolicy = 'strict-origin-when-cross-origin';
-      f.setAttribute('allowfullscreen', '');
-      gate.replaceWith(f);
-    });
-  });
-
   /* Cookies e medição de audiência (GA4) só no domínio oficial e só com consentimento */
   var GA_ID = 'G-0187QN1XTF';
   var oficial = /(^|\.)m3bs\.com\.br$/.test(location.hostname);

@@ -758,9 +758,10 @@ footer ul a:hover{color:#fff}
 .btn-outline-dark:hover{background:var(--burgundy);color:#FCF6EC;transform:translateY(-2px)}
 
 /* mapa com consentimento */
-.map-gate{min-height:300px;display:flex;flex-direction:column;justify-content:center;gap:18px;padding:36px;background:var(--cream-2);color:var(--ink-soft)}
-.map-gate p{max-width:60ch}
-.map-acoes{display:flex;gap:12px;flex-wrap:wrap}
+.contact-info a.btn{border-bottom:0;padding:14px 30px}
+.contact-info a.btn.btn-burgundy{color:#FCF6EC}
+.contact-info a.btn.btn-gold{color:var(--burgundy-black)}
+.map-acoes{display:flex;gap:12px;flex-wrap:wrap;justify-content:flex-end;margin-top:14px}
 .map-frame iframe{display:block;width:100%;height:380px;border:0}
 
 /* aviso de cookies */
@@ -780,5 +781,4 @@ footer ul a:hover{color:#fff}
   .area-side{position:static}
   .area-sub .sub-body{padding-left:0}
   .sobre-photo{height:260px}
-  .map-gate{padding:24px}
 }
