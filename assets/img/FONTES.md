@@ -46,3 +46,5 @@ Archivo (400, 500, 600, 700) e Cormorant Garamond (500 e 600, normal e itálico)
 Não coletados: vídeo institucional `wp-content/themes/temam3bs/assets/video/video-institucional1.mp4` (não é foto; URL anotada para decisão futura).
 
 Total de imagens: 1.31 MB em 31 arquivos coletados, mais logos e imagem Open Graph.
+
+Favicon `favicon.ico` (16, 32 e 48 px) gerado em 09/11/2026 com Pillow a partir de `logo-m3bs-sigla-fundo-claro.png`, centralizado em quadrado transparente, para atender a pedidos diretos de `/favicon.ico` feitos por navegadores e ferramentas.

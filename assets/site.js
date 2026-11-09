@@ -75,13 +75,28 @@
     }
   }
 
-  /* Âncora na URL (#relacao-com-a-ans etc.): refaz a rolagem depois que fontes e imagens assentam o layout */
+  /* Âncora na URL (#relacao-com-a-ans etc.): refaz a rolagem depois que fontes e imagens assentam o layout.
+     Salto instantâneo de propósito: a rolagem suave do CSS pode ser cancelada pelo navegador durante o carregamento. */
   if(location.hash && location.hash.length > 1){
     window.addEventListener('load', function(){
       setTimeout(function(){
-        var alvo = document.getElementById(location.hash.slice(1));
-        if(alvo) alvo.scrollIntoView({ block: 'start' });
+        var alvo = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+        if(alvo) alvo.scrollIntoView({ block: 'start', behavior: 'instant' });
       }, 350);
+    });
+  }
+
+  /* Página 404 tem <base href>: links internos (#conteudo) voltariam para a home; rolar na própria página */
+  if(document.querySelector('base')){
+    document.querySelectorAll('a[href^="#"]').forEach(function(a){
+      a.addEventListener('click', function(ev){
+        var alvo = document.getElementById(a.getAttribute('href').slice(1));
+        if(!alvo) return;
+        ev.preventDefault();
+        alvo.scrollIntoView({ block: 'start' });
+        if(alvo.tabIndex < 0) alvo.tabIndex = -1;
+        alvo.focus({ preventScroll: true });
+      });
     });
   }
 
