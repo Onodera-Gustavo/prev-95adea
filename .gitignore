@@ -1,0 +1,10 @@
+# Arquivos do sistema e do editor
+Thumbs.db
+desktop.ini
+.DS_Store
+*.tmp
+*~
+.vscode/
+
+# Rascunhos e originais pesados ficam fora do repositório
+assets/img/_originais/
