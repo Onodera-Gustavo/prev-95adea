@@ -39,6 +39,21 @@
     { id: 'publicos', nome: 'Negócios Públicos e Licitações', curto: 'Negócios Públicos', sub: 'Negócios públicos e licitações no setor de saúde.', img: 'area-negocios-publicos.jpg', tema: 'Licitações em acompanhamento' },
     { id: 'academia', nome: 'Academia M3BS', curto: 'Academia', sub: 'Formação e conteúdo jurídico para o mercado de saúde suplementar.', img: 'area-academia-m3bs.jpg', tema: 'Calendário de cursos 2027' }
   ];
+  /* subáreas iniciais: tiradas dos grupos de serviço de cada frente no site, três por área;
+     o coordenador renomeia, acrescenta e remove em "Editar subáreas" */
+  var SUBS_INICIAIS = {
+    ans: ['Operação Regulatória', 'Interlocução com a ANS', 'Prevenção e Inteligência Regulatória'],
+    regulatorio: ['Regimes Especiais', 'Direção Técnica e Fiscal', 'Alienação de Carteira e Liquidação'],
+    judicial: ['Judicialização da Saúde', 'Contencioso em Saúde Suplementar', 'Recuperação de Crédito'],
+    administrativo: ['Defesa do Consumidor', 'Processos Sancionatórios', 'Profissionais da Saúde'],
+    economico: ['Processos Econômico-Financeiros', 'Execuções Fiscais e Débitos', 'Cobranças Indevidas'],
+    tributario: ['Assessoria e Planejamento', 'Autuações e Execuções Fiscais', 'Transação com a PGFN'],
+    trabalhista: ['Contencioso Trabalhista', 'Preventivo e Estrutural', 'Pareceres'],
+    societario: ['Estrutura Societária', 'Contratos e Due Diligence', 'Governança e Integridade'],
+    publicos: ['Inteligência Comercial', 'Certames e Contencioso', 'Contratos Públicos'],
+    academia: ['Capacitação Técnica', 'Programas In-Company', 'Painéis e Workshops']
+  };
+  var MAX_SUBS = 8;
   function frente(id) { return FRENTES.filter(function (f) { return f.id === id; })[0]; }
   function coord(f) { return 'Coordenação ' + (f.id === 'academia' ? 'da Academia' : f.id === 'ans' ? 'de Relação com a ANS' : 'de ' + f.curto); }
   function coordMin(f) { return 'c' + coord(f).slice(1); }
@@ -46,30 +61,52 @@
 
   /* ---------------- estado ---------------- */
   var CHAVE = 'm3bs-painel-areas-v1', CHAVE_SESSAO = 'm3bs-painel-areas-sessao';
-  var estado = null, sessao = null, atual = null, termo = '';
+  var estado = null, sessao = null, atual = null, atualSub = null, termo = '';
+  var MODELOS = ['resultados', 'plano', 'tema'];
 
+  function subsIniciais() {
+    var s = {};
+    FRENTES.forEach(function (f) { s[f.id] = SUBS_INICIAIS[f.id].map(function (n, i) { return { id: f.id + '-s' + (i + 1), nome: n }; }); });
+    return s;
+  }
   function exemplos() {
-    var itens = [];
+    var itens = [], subs = subsIniciais();
     FRENTES.forEach(function (f) {
       [
         { modelo: 'resultados', titulo: 'Resultados do 3º trimestre de 2026', paginas: 5, data: '06/11/2026' },
         { modelo: 'plano', titulo: 'Plano de trabalho 2027', paginas: 4, data: '29/10/2026' },
         { modelo: 'tema', titulo: f.tema, paginas: 4, data: '14/10/2026' }
-      ].forEach(function (m) {
-        itens.push({ id: uid('ap'), frente: f.id, titulo: m.titulo, exemplo: m.modelo, paginas: m.paginas, pdf: null, pptx: null, nomePdf: '', nomePptx: '', criadoEm: m.data, atualizadoEm: m.data, por: coord(f), versao: 1 });
+      ].forEach(function (m, i) {
+        itens.push({ id: uid('ap'), frente: f.id, sub: subs[f.id][i].id, titulo: m.titulo, exemplo: m.modelo, paginas: m.paginas, pdf: null, pptx: null, nomePdf: '', nomePptx: '', criadoEm: m.data, atualizadoEm: m.data, por: coord(f), versao: 1 });
       });
     });
-    return { versao: 1, itens: itens };
+    return { versao: 2, subs: subs, itens: itens };
   }
-  function valido(o) { return o && o.versao === 1 && Array.isArray(o.itens) && o.itens.every(function (i) { return i && i.id && i.frente && typeof i.titulo === 'string'; }); }
+  function itensOk(o) { return Array.isArray(o.itens) && o.itens.every(function (i) { return i && i.id && i.frente && typeof i.titulo === 'string'; }); }
+  function valido(o) { return o && o.versao === 2 && o.subs && typeof o.subs === 'object' && itensOk(o); }
+  /* versão 1 (sem subáreas): ganha as subáreas iniciais; exemplos vão cada um para uma subárea, o resto fica sem subárea */
+  function migra(o) {
+    if (!o || o.versao !== 1 || !itensOk(o)) return null;
+    o.versao = 2; o.subs = subsIniciais();
+    o.itens.forEach(function (i) { var k = MODELOS.indexOf(i.exemplo); i.sub = k >= 0 && o.subs[i.frente] ? o.subs[i.frente][k].id : null; });
+    return o;
+  }
   function carrega() {
     var o = null; try { o = JSON.parse(ls(CHAVE) || 'null'); } catch (e) { o = null; }
-    estado = valido(o) ? o : exemplos();
-    if (!valido(o)) salva();
+    if (valido(o)) { estado = o; }
+    else { estado = migra(o) || exemplos(); salva(); }
+    FRENTES.forEach(function (f) { if (!Array.isArray(estado.subs[f.id])) estado.subs[f.id] = []; });
   }
   function salva() { ls(CHAVE, JSON.stringify(estado)); }
   function item(id) { return estado.itens.filter(function (i) { return i.id === id; })[0]; }
   function daFrente(fid) { return estado.itens.filter(function (i) { return i.frente === fid; }); }
+  function subsDe(fid) { return estado.subs[fid] || []; }
+  function subNome(fid, sid) { var s = subsDe(fid).filter(function (x) { return x.id === sid; })[0]; return s ? s.nome : ''; }
+  function subValida(fid, sid) { return !!subNome(fid, sid); }
+  /* SEM = apresentações sem subárea (ou de subárea removida) */
+  var SEM = 'sem';
+  function naSub(i, sid) { return sid === null ? true : sid === SEM ? !subValida(i.frente, i.sub) : i.sub === sid; }
+  function visiveis(fid, sid) { return daFrente(fid).filter(function (i) { return naSub(i, sid); }); }
   function pode(fid) { return !!sessao && sessao === fid; }
 
   /* ---------------- IndexedDB: arquivos originais e páginas ---------------- */
@@ -141,7 +178,7 @@
   var W = 1280, H = 720, LOGO = null, fontesProm = null;
   function fontes() {
     if (fontesProm) return fontesProm;
-    var lista = ['600 60px "Cormorant Garamond"', '400 24px Archivo', '600 24px Archivo', '700 24px Archivo'];
+    var lista = ['700 60px "Playfair Display"', '600 60px "Playfair Display"', '400 24px Inter', '600 24px Inter', '700 24px Inter'];
     fontesProm = Promise.all(lista.map(function (f) { return document.fonts && document.fonts.load ? document.fonts.load(f).catch(function () {}) : null; })).then(function () {
       if (!/^https?:/.test(location.protocol)) return; /* aberto do disco, a imagem sujaria o canvas */
       return new Promise(function (ok) { var im = new Image(); im.onload = function () { LOGO = im; ok(); }; im.onerror = function () { ok(); }; im.src = 'assets/img/logo-m3bs-sigla-fundo-escuro.png'; });
@@ -172,7 +209,7 @@
       fim];
   }
   function rodapeSlide(x, f, n, tot, claro) {
-    x.font = '600 15px Archivo'; x.fillStyle = claro ? 'rgba(235,220,201,.85)' : '#85672E';
+    x.font = '600 15px Inter'; x.fillStyle = claro ? 'rgba(235,220,201,.85)' : '#85672E';
     x.textAlign = 'left'; x.fillText('M3BS  ·  ' + f.nome.toUpperCase(), 64, H - 40);
     x.textAlign = 'right'; x.fillText('EXEMPLO · CONTEÚDO FICTÍCIO     ' + dois(n + 1) + ' / ' + dois(tot), W - 64, H - 40);
     x.textAlign = 'left';
@@ -191,33 +228,33 @@
       if (p.t === 'capa' || p.t === 'fim') {
         fundoBordo(x);
         x.fillStyle = '#B69253'; x.fillRect(64, 64, 6, H - 128);
-        if (LOGO) x.drawImage(LOGO, W - 64 - 150, 60, 150, 72); else { x.font = '700 30px Archivo'; x.fillStyle = '#E2CDA4'; x.textAlign = 'right'; x.fillText('M3BS', W - 64, 100); x.textAlign = 'left'; }
-        x.font = '600 18px Archivo'; x.fillStyle = '#C9AB74'; x.fillText(f.nome.toUpperCase(), 104, 112);
+        if (LOGO) x.drawImage(LOGO, W - 64 - 150, 60, 150, 72); else { x.font = '700 30px Inter'; x.fillStyle = '#E2CDA4'; x.textAlign = 'right'; x.fillText('M3BS', W - 64, 100); x.textAlign = 'left'; }
+        x.font = '600 18px Inter'; x.fillStyle = '#C9AB74'; x.fillText((f.nome + (it.sub && subNome(f.id, it.sub) ? '  ·  ' + subNome(f.id, it.sub) : '')).toUpperCase(), 104, 112);
         if (p.t === 'capa') {
-          x.font = '600 76px "Cormorant Garamond"'; x.fillStyle = '#FFFFFF';
+          x.font = '700 62px "Playfair Display"'; x.fillStyle = '#FFFFFF';
           var ls_ = quebra(x, it.titulo, W - 300).slice(0, 3), y0 = 330 - (ls_.length - 1) * 42;
           ls_.forEach(function (l, i) { x.fillText(l, 104, y0 + i * 84); });
           x.fillStyle = '#B69253'; x.fillRect(104, y0 + ls_.length * 84 - 40, 72, 4);
-          x.font = '400 24px Archivo'; x.fillStyle = '#EBDCC9'; x.fillText(coord(f) + '  ·  ' + it.criadoEm, 104, y0 + ls_.length * 84 + 14);
+          x.font = '400 24px Inter'; x.fillStyle = '#EBDCC9'; x.fillText(coord(f) + '  ·  ' + it.criadoEm, 104, y0 + ls_.length * 84 + 14);
         } else {
-          x.font = '600 84px "Cormorant Garamond"'; x.fillStyle = '#FFFFFF'; x.fillText('Obrigado', 104, 340);
+          x.font = '700 72px "Playfair Display"'; x.fillStyle = '#FFFFFF'; x.fillText('Obrigado', 104, 340);
           x.fillStyle = '#B69253'; x.fillRect(104, 372, 72, 4);
-          x.font = '400 26px Archivo'; x.fillStyle = '#EBDCC9'; x.fillText('Dúvidas e próximos passos com a ' + coordMin(f) + '.', 104, 430);
+          x.font = '400 26px Inter'; x.fillStyle = '#EBDCC9'; x.fillText('Dúvidas e próximos passos com a ' + coordMin(f) + '.', 104, 430);
         }
         rodapeSlide(x, f, n, pags.length, true);
       } else {
         x.fillStyle = '#FAF7F2'; x.fillRect(0, 0, W, H);
         x.fillStyle = '#6B1F2A'; x.fillRect(0, 0, 14, H);
-        x.font = '600 16px Archivo'; x.fillStyle = '#85672E'; x.fillText(it.titulo.toUpperCase().slice(0, 70), 64, 82);
-        x.font = '600 58px "Cormorant Garamond"'; x.fillStyle = '#6B1F2A'; x.fillText(p.tit, 64, 152);
+        x.font = '600 16px Inter'; x.fillStyle = '#85672E'; x.fillText(it.titulo.toUpperCase().slice(0, 70), 64, 82);
+        x.font = '700 46px "Playfair Display"'; x.fillStyle = '#6B1F2A'; x.fillText(p.tit, 64, 152);
         x.fillStyle = '#B69253'; x.fillRect(64, 176, 56, 3);
         if (p.t === 'lista') {
           p.itens.forEach(function (t, i) {
             var y = 250 + i * 92;
             x.fillStyle = '#FFFFFF'; x.strokeStyle = '#E6E0D6'; x.lineWidth = 1.5; caixa(x, 64, y - 44, W - 128, 74, 12); x.fill(); x.stroke();
             x.fillStyle = '#6B1F2A'; x.beginPath(); x.arc(108, y - 7, 20, 0, Math.PI * 2); x.fill();
-            x.font = '700 18px Archivo'; x.fillStyle = '#FFFFFF'; x.textAlign = 'center'; x.fillText(dois(i + 1), 108, y - 1); x.textAlign = 'left';
-            x.font = '400 26px Archivo'; x.fillStyle = '#1F1B18'; x.fillText(t, 148, y + 2);
+            x.font = '700 18px Inter'; x.fillStyle = '#FFFFFF'; x.textAlign = 'center'; x.fillText(dois(i + 1), 108, y - 1); x.textAlign = 'left';
+            x.font = '400 26px Inter'; x.fillStyle = '#1F1B18'; x.fillText(t, 148, y + 2);
           });
         } else {
           var lw = (W - 128 - 2 * 28) / 3;
@@ -225,8 +262,8 @@
             var x0 = 64 + i * (lw + 28);
             x.fillStyle = '#FFFFFF'; x.strokeStyle = '#E6E0D6'; x.lineWidth = 1.5; caixa(x, x0, 230, lw, 340, 14); x.fill(); x.stroke();
             x.fillStyle = '#6B1F2A'; x.fillRect(x0, 230, lw, 6);
-            x.font = '600 120px "Cormorant Garamond"'; x.fillStyle = '#6B1F2A'; x.fillText(nu[0], x0 + 36, 400);
-            x.font = '400 24px Archivo'; x.fillStyle = '#544D47'; quebra(x, nu[1], lw - 72).forEach(function (l, j) { x.fillText(l, x0 + 36, 462 + j * 34); });
+            x.font = '700 96px "Playfair Display"'; x.fillStyle = '#6B1F2A'; x.fillText(nu[0], x0 + 36, 400);
+            x.font = '400 24px Inter'; x.fillStyle = '#544D47'; quebra(x, nu[1], lw - 72).forEach(function (l, j) { x.fillText(l, x0 + 36, 462 + j * 34); });
           });
         }
         rodapeSlide(x, f, n, pags.length, false);
@@ -338,20 +375,21 @@
     if (!a.grupos.length) return;
     if (!idb) { toast('Este navegador não deixou guardar arquivos (modo privado?). Nada foi adicionado.', 5200); return; }
     ocupado = true;
-    var f = frente(atual), novos = 0, cortes = [], cadeia = Promise.resolve();
+    var f = frente(atual), sub = atualSub && atualSub !== SEM && subValida(f.id, atualSub) ? atualSub : null, novos = 0, cortes = [], cadeia = Promise.resolve();
     a.grupos.forEach(function (g) {
       cadeia = cadeia.then(function () {
         var id = uid('ap');
         return processaGrupo(g, id).then(function (c) {
           if (c.total > MAX_PAG) cortes.push(g.titulo);
-          estado.itens.push({ id: id, frente: f.id, titulo: g.titulo, exemplo: null, paginas: c.paginas, pdf: c.pdf, pptx: c.pptx, nomePdf: c.nomePdf, nomePptx: c.nomePptx, criadoEm: hoje(), atualizadoEm: hoje(), por: coord(f), versao: 1 });
+          estado.itens.push({ id: id, frente: f.id, sub: sub, titulo: g.titulo, exemplo: null, paginas: c.paginas, pdf: c.pdf, pptx: c.pptx, nomePdf: c.nomePdf, nomePptx: c.nomePptx, criadoEm: hoje(), atualizadoEm: hoje(), por: coord(f), versao: 1 });
           salva(); novos++;
         });
       });
     });
     cadeia.then(function () {
       ocupado = false; render();
-      var m = novos === 1 ? 'Apresentação adicionada no fim da lista.' : novos + ' apresentações adicionadas no fim da lista.';
+      var onde = sub ? ' em ' + subNome(f.id, sub) : ' sem subárea (use "Mover para subárea" no menu do cartão)';
+      var m = (novos === 1 ? 'Apresentação adicionada' : novos + ' apresentações adicionadas') + onde + '.';
       if (cortes.length) m += ' O PDF "' + cortes[0] + '" passou de ' + MAX_PAG + ' páginas; a prévia mostra as ' + MAX_PAG + ' primeiras, e o arquivo baixado vem inteiro.';
       toast(m, cortes.length ? 6000 : 3000);
     }, function (er) {
@@ -446,10 +484,9 @@
   function renderHero() {
     var f = frente(atual), its = daFrente(f.id), ult = its.map(function (i) { return i.atualizadoEm; }).sort(function (a, b) { return b.split('/').reverse().join('').localeCompare(a.split('/').reverse().join('')); })[0];
     $('#hero').innerHTML = '<div class="wrap"><div>' +
-      '<p class="crumb">Painel das Áreas <span aria-hidden="true">/</span> ' + esc(f.curto) + '</p>' +
       '<h1>' + esc(f.nome) + '</h1>' +
       '<p class="sub">' + esc(f.sub) + '</p>' +
-      '<div class="pa-hero__fatos"><span><b>' + its.length + '</b> ' + (its.length === 1 ? 'apresentação' : 'apresentações') + '</span>' +
+      '<div class="pa-hero__fatos"><span><b>' + its.length + '</b> ' + (its.length === 1 ? 'apresentação' : 'apresentações') + ' em <b>' + subsDe(f.id).length + '</b> ' + (subsDe(f.id).length === 1 ? 'subárea' : 'subáreas') + '</span>' +
       (ult ? '<span>Última atualização em <b>' + ult + '</b></span>' : '') +
       (pode(f.id) ? '<span class="pa-selo">Você coordena esta área</span>' : '<span class="pa-selo pa-selo--leitura">Somente leitura: abrir e baixar. Quem altera é a ' + esc(coordMin(f)) + '</span>') + '</div>' +
       '</div><figure class="pa-hero__foto"><img src="assets/img/' + f.img + '" alt="" width="700" height="466" decoding="async"></figure></div>';
@@ -458,7 +495,20 @@
     var f = frente(atual), ed = pode(f.id);
     $('#bt-add').hidden = !ed;
     $('#aviso-leitura').hidden = true; /* o aviso de leitura fica no selo da faixa, para os cartões caberem na primeira tela */
-    $('#solta-txt').textContent = 'Solte para adicionar em ' + f.curto;
+    $('#solta-txt').textContent = 'Solte para adicionar em ' + (atualSub && atualSub !== SEM && subValida(f.id, atualSub) ? subNome(f.id, atualSub) : f.curto);
+  }
+  function renderSubs() {
+    var f = frente(atual), subs = subsDe(f.id), nSem = visiveis(f.id, SEM).length;
+    var link = function (sid, nome, n, cls) {
+      var href = '#/' + f.id + (sid ? '/' + sid : ''), on = (sid || null) === atualSub;
+      return '<li><a href="' + href + '"' + (cls ? ' class="' + cls + '"' : '') + (on ? ' aria-current="page"' : '') + '>' + esc(nome) + '<span>' + n + '</span></a></li>';
+    };
+    $('#subs').innerHTML = link(null, 'Todas', daFrente(f.id).length) +
+      subs.map(function (s) { return link(s.id, s.nome, visiveis(f.id, s.id).length); }).join('') +
+      (nSem || atualSub === SEM ? link(SEM, 'Sem subárea', nSem, 'sem') : '');
+    $('#bt-subs').hidden = !pode(f.id);
+    var a = $('#subs a[aria-current]');
+    if (a) { var ul = $('#subs'), r = a.getBoundingClientRect(), ru = ul.getBoundingClientRect(); if (r.left < ru.left || r.right > ru.right) ul.scrollLeft += r.left - ru.left - 24; }
   }
   function cartao(it, i, ed, total) {
     var tags = (it.pdf || it.exemplo ? '<span class="ap__tag ap__tag--pdf">PDF</span>' : '') + (it.pptx ? '<span class="ap__tag ap__tag--ppt">PPTX</span>' : '') + (it.exemplo ? '<span class="ap__tag ap__tag--ex">Exemplo</span>' : '');
@@ -472,22 +522,27 @@
       '<button type="button" data-acao="substituir">Substituir arquivos</button>' +
       '<hr><button type="button" data-acao="antes"' + (i === 0 ? ' disabled' : '') + '>Mover para antes</button>' +
       '<button type="button" data-acao="depois"' + (i === total - 1 ? ' disabled' : '') + '>Mover para depois</button>' +
+      '<hr><span class="rot">Mover para subárea</span>' +
+      subsDe(it.frente).map(function (s) { var on = s.id === it.sub; return '<button type="button" data-acao="sub" data-sub="' + s.id + '"' + (on ? ' aria-current="true" disabled' : '') + '>' + esc(s.nome) + (on ? '<small>Está aqui</small>' : '') + '</button>'; }).join('') +
+      (subValida(it.frente, it.sub) ? '<button type="button" data-acao="sub" data-sub="">Sem subárea</button>' : '') +
       '<hr><button type="button" class="perigo" data-acao="excluir">Excluir</button></div></details>' : '';
+    var eyebrow = atualSub === null && subValida(it.frente, it.sub) ? '<span class="ap__sub">' + esc(subNome(it.frente, it.sub)) + '</span>' : '';
     return '<li class="ap" data-id="' + it.id + '" style="--i:' + i + '"' + (ed ? ' draggable="true" tabindex="0" aria-label="' + esc(it.titulo) + ', posição ' + (i + 1) + ' de ' + total + '. Alt e setas para mudar a ordem."' : '') + '>' +
       '<button class="ap__thumb" type="button" data-acao="abrir" aria-label="Abrir ' + esc(it.titulo) + '">' +
       (it.paginas || it.exemplo ? '<div class="ap__carrega" data-mini="' + it.id + '"></div>' : '<div class="ap__ppt">' + ICO.ppt + '<span>PowerPoint sem prévia no protótipo.<br>Suba o PDF junto para ver aqui.</span></div>') +
       '<span class="ap__ord">' + dois(i + 1) + '</span><span class="ap__tags">' + tags + '</span></button>' +
-      '<div class="ap__corpo"><h3>' + esc(it.titulo) + '</h3><p class="ap__meta">' + meta + '</p>' +
+      '<div class="ap__corpo">' + eyebrow + '<h3>' + esc(it.titulo) + '</h3><p class="ap__meta">' + meta + '</p>' +
       '<div class="ap__acoes"><button class="bt-p bt-p--cheio" type="button" data-acao="abrir">Abrir</button>' + menuBaixar + menuMais +
       (ed ? '<span class="ap__alca" title="Arraste para mudar a ordem" aria-hidden="true">' + ICO.alca + '</span>' : '') + '</div></div></li>';
   }
   function renderGrade() {
-    var ed = pode(atual), todos = daFrente(atual), t = semAcento(termo.trim());
+    var ed = pode(atual), todos = visiveis(atual, atualSub), t = semAcento(termo.trim());
     var vis = t ? todos.filter(function (i) { return semAcento(i.titulo).indexOf(t) >= 0; }) : todos;
+    var nomeSub = atualSub === SEM ? 'Sem subárea' : atualSub ? subNome(atual, atualSub) : '';
     $('#barra-tit').innerHTML = 'Apresentações' + (t ? '<small>' + vis.length + ' de ' + todos.length + '</small>' : '');
     var g = $('#grade');
-    if (!todos.length) g.innerHTML = '<li class="pa-vazio"><b>Nenhuma apresentação ainda</b>' + (ed ? 'Use "Adicionar apresentação" ou arraste PDF e PowerPoint para cá.' : 'A coordenação desta área ainda não subiu nada.') + '</li>';
-    else if (!vis.length) g.innerHTML = '<li class="pa-vazio"><b>Nada encontrado</b>Nenhum título com "' + esc(termo.trim()) + '" nesta área.</li>';
+    if (!todos.length) g.innerHTML = '<li class="pa-vazio"><b>' + (nomeSub ? 'Nada em ' + esc(nomeSub) + ' ainda' : 'Nenhuma apresentação ainda') + '</b>' + (ed ? (atualSub === SEM ? 'Aqui ficam as apresentações que ainda não têm subárea.' : 'Use "Adicionar apresentação" ou arraste PDF e PowerPoint para cá.') : 'A coordenação desta área ainda não subiu nada aqui.') + '</li>';
+    else if (!vis.length) g.innerHTML = '<li class="pa-vazio"><b>Nada encontrado</b>Nenhum título com "' + esc(termo.trim()) + '" ' + (nomeSub ? 'em ' + esc(nomeSub) : 'nesta área') + '.</li>';
     else g.innerHTML = vis.map(function (it) { return cartao(it, todos.indexOf(it), ed && !t, todos.length); }).join('');
     if (semMov()) $$('.ap', g).forEach(function (e) { e.style.animation = 'none'; e.style.opacity = 1; e.style.transform = 'none'; });
     vis.forEach(function (it) {
@@ -501,11 +556,13 @@
   }
   function render() {
     if (!sessao) { mostraLogin(); return; }
-    renderAbas(); renderHero(); renderBarra(); renderGrade();
+    renderAbas(); renderHero(); renderBarra(); renderSubs(); renderGrade();
   }
   function rota() {
-    var m = /^#\/([a-z]+)/.exec(location.hash), id = m && frente(m[1]) ? m[1] : sessao;
-    if (id !== atual) { atual = id; termo = ''; $('#busca').value = ''; }
+    var m = /^#\/([a-z]+)(?:\/([a-z0-9-]+))?/.exec(location.hash), id = m && frente(m[1]) ? m[1] : sessao;
+    var sid = m && id === m[1] && m[2] ? (m[2] === SEM || subValida(id, m[2]) ? m[2] : null) : null;
+    if (id !== atual || sid !== atualSub) { termo = ''; $('#busca').value = ''; }
+    atual = id; atualSub = sid;
     render();
   }
 
@@ -551,13 +608,13 @@
 
   function move(id, delta) {
     var it = item(id); if (!it || !pode(it.frente)) return false;
-    var lst = daFrente(it.frente), i = lst.indexOf(it), alvo = lst[i + delta]; if (!alvo) return false;
+    var lst = visiveis(it.frente, atualSub), i = lst.indexOf(it), alvo = lst[i + delta]; if (!alvo) return false;
     var a = estado.itens.indexOf(it), b = estado.itens.indexOf(alvo);
     estado.itens[a] = alvo; estado.itens[b] = it; salva(); renderGrade(); return true;
   }
   function moveAte(id, idAlvo) {
     var it = item(id), alvo = item(idAlvo); if (!it || !alvo || it === alvo || it.frente !== alvo.frente) return;
-    var lst = daFrente(it.frente), de = lst.indexOf(it), para = lst.indexOf(alvo);
+    var lst = visiveis(it.frente, atualSub), de = lst.indexOf(it), para = lst.indexOf(alvo);
     estado.itens.splice(estado.itens.indexOf(it), 1);
     var pos = estado.itens.indexOf(alvo); estado.itens.splice(de < para ? pos + 1 : pos, 0, it);
     salva(); renderGrade(); toast('Ordem salva.');
@@ -574,6 +631,10 @@
     else if (!pode(it.frente)) return;
     else if (a === 'renomear') { renomeando = it.id; $('#dn-tit').value = it.titulo; $('#dlg-nome').showModal(); $('#dn-tit').select(); }
     else if (a === 'substituir') { trocando = it.id; $('#dt-msg').textContent = 'Nova versão de "' + it.titulo + '".'; $('#dlg-troca').showModal(); $('#dt-sim').focus(); }
+    else if (a === 'sub') {
+      it.sub = b.dataset.sub || null; salva(); render();
+      toast(it.sub ? '"' + it.titulo + '" foi para ' + subNome(it.frente, it.sub) + '.' : '"' + it.titulo + '" ficou sem subárea.');
+    }
     else if (a === 'antes' || a === 'depois') { if (move(it.id, a === 'antes' ? -1 : 1)) { toast('Ordem salva.'); var c = $('.ap[data-id="' + it.id + '"]'); if (c) c.focus(); } }
     else if (a === 'excluir') confirma('Excluir apresentação', 'Excluir "' + it.titulo + '" de ' + frente(it.frente).curto + '? Os arquivos saem deste navegador e não dá para desfazer.', 'Excluir', function () {
       estado.itens.splice(estado.itens.indexOf(it), 1); salva(); apagaArquivosDe(it); render(); toast('Apresentação excluída.');
@@ -622,8 +683,55 @@
   $('#busca').addEventListener('input', function (e) { termo = e.target.value; renderGrade(); });
   $('#bt-restaurar').addEventListener('click', function () {
     confirma('Restaurar exemplos', 'Apagar tudo o que foi subido ou mudado neste navegador, em todas as áreas, e voltar às apresentações de exemplo?', 'Restaurar', function () {
-      PAG = {}; MINI = {}; idbLimpa().then(function () { estado = exemplos(); salva(); render(); toast('Exemplos restaurados.'); });
+      PAG = {}; MINI = {}; idbLimpa().then(function () { estado = exemplos(); salva(); atualSub = null; if (location.hash !== '#/' + atual) location.hash = '#/' + atual; else render(); toast('Exemplos restaurados.'); });
     });
+  });
+
+  /* ---------------- editar subáreas ---------------- */
+  var removidas = [];
+  function linhaSub(s) {
+    var n = s.id ? visiveis(atual, s.id).length : 0;
+    return '<li data-id="' + (s.id || '') + '"><span class="n"></span><input type="text" maxlength="60" value="' + esc(s.nome) + '" aria-label="Nome da subárea" placeholder="Nome da subárea">' +
+      '<small>' + (s.id ? n + (n === 1 ? ' apresentação' : ' apresentações') : 'nova') + '</small>' +
+      '<button type="button" data-rem aria-label="Remover subárea"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button></li>';
+  }
+  function numeraSubs() { $$('#ds-lista li').forEach(function (li, i) { $('.n', li).textContent = dois(i + 1); }); $('#ds-add').disabled = $$('#ds-lista li').length >= MAX_SUBS; }
+  $('#bt-subs').addEventListener('click', function () {
+    if (!pode(atual)) return;
+    removidas = [];
+    $('#ds-frente').textContent = frente(atual).curto;
+    $('#ds-lista').innerHTML = subsDe(atual).map(linhaSub).join('');
+    numeraSubs(); $('#dlg-subs').showModal();
+    var p = $('#ds-lista input'); if (p) p.focus();
+  });
+  $('#ds-add').addEventListener('click', function () {
+    if ($$('#ds-lista li').length >= MAX_SUBS) { toast('Até ' + MAX_SUBS + ' subáreas por área.'); return; }
+    $('#ds-lista').insertAdjacentHTML('beforeend', linhaSub({ id: '', nome: '' })); numeraSubs();
+    var ins = $$('#ds-lista input'); ins[ins.length - 1].focus();
+  });
+  $('#ds-lista').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-rem]'); if (!b) return;
+    var li = b.closest('li'); if (li.dataset.id) removidas.push(li.dataset.id);
+    li.remove(); numeraSubs();
+  });
+  $('#ds-nao').addEventListener('click', function () { $('#dlg-subs').close(); });
+  $('#form-subs').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var f = frente(atual), velhas = subsDe(f.id), nova = [], seq = 1;
+    $$('#ds-lista li').forEach(function (li) {
+      var nome = $('input', li).value.trim().slice(0, 60), id = li.dataset.id;
+      if (id) { if (!nome) nome = subNome(f.id, id); nova.push({ id: id, nome: nome }); }
+      else if (nome) {
+        while (velhas.concat(nova).some(function (s) { return s.id === f.id + '-n' + seq; })) seq++;
+        nova.push({ id: f.id + '-n' + seq, nome: nome }); seq++;
+      }
+    });
+    var tirados = 0;
+    estado.itens.forEach(function (i) { if (i.frente === f.id && i.sub && removidas.indexOf(i.sub) >= 0) { i.sub = null; tirados++; } });
+    estado.subs[f.id] = nova; salva(); $('#dlg-subs').close();
+    if (atualSub && atualSub !== SEM && !subValida(f.id, atualSub)) { atualSub = null; location.hash = '#/' + f.id; }
+    render();
+    toast('Subáreas salvas.' + (tirados ? ' ' + tirados + (tirados === 1 ? ' apresentação ficou' : ' apresentações ficaram') + ' em "Sem subárea".' : ''), tirados ? 4200 : 2400);
   });
   window.addEventListener('hashchange', rota);
 

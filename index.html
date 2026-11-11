@@ -9,11 +9,11 @@
 <meta name="robots" content="noindex,nofollow">
 <meta name="theme-color" content="#6B1F2A">
 <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48">
-<link rel="preload" href="assets/fonts/CormorantGaramond-600-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/Archivo-400-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/fonts/fonts.css?v=2026111105">
-<link rel="stylesheet" href="assets/styles.css?v=2026111105">
-<link rel="stylesheet" href="assets/painel.css?v=2026111105">
+<link rel="preload" href="assets/fonts/PlayfairDisplay-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/Inter-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/fonts/fonts-m3bs.css?v=2026111111">
+<link rel="stylesheet" href="assets/styles.css?v=2026111111">
+<link rel="stylesheet" href="assets/painel.css?v=2026111111">
 </head>
 <body class="pa">
 <a class="skip" href="#conteudo">Ir para o conteúdo</a>
@@ -70,12 +70,23 @@
   </header>
 
   <main id="conteudo">
-    <section class="page-hero pa-hero" id="hero"></section>
+    <section class="page-hero pa-hero">
+      <div id="hero"></div>
+      <div class="wrap">
+        <nav class="pa-subs" aria-label="Subáreas">
+          <ul id="subs"></ul>
+          <button class="pa-subs__editar" type="button" id="bt-subs" hidden title="Editar subáreas">
+            <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></svg>
+            <span>Editar subáreas</span>
+          </button>
+        </nav>
+      </div>
+    </section>
 
     <section class="pa-area">
       <div class="wrap">
         <div class="pa-barra">
-          <h2 class="pa-barra__tit" id="barra-tit">Apresentações</h2>
+          <h2 class="sr" id="barra-tit">Apresentações</h2>
           <label class="pa-busca">
             <span class="sr">Buscar apresentação</span>
             <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M20 20l-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
@@ -149,6 +160,22 @@
   </form>
 </dialog>
 
+<dialog class="pa-dlg pa-dlg--largo" id="dlg-subs">
+  <form id="form-subs">
+    <h3>Subáreas de <span id="ds-frente"></span></h3>
+    <p>Cada subárea vira uma aba dentro da área. Ao remover uma subárea, as apresentações dela continuam na área, em "Sem subárea".</p>
+    <ol class="pa-subs-ed" id="ds-lista"></ol>
+    <button class="bt-p" type="button" id="ds-add">
+      <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+      Nova subárea
+    </button>
+    <div class="pa-dlg__acoes">
+      <button class="btn btn-outline-dark" type="button" id="ds-nao">Cancelar</button>
+      <button class="btn btn-burgundy" type="submit">Salvar</button>
+    </div>
+  </form>
+</dialog>
+
 <dialog class="pa-dlg" id="dlg-troca">
   <h3>Substituir arquivos</h3>
   <p id="dt-msg"></p>
@@ -165,6 +192,6 @@
 
 <div class="pa-toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="assets/painel.js?v=2026111105"></script>
+<script src="assets/painel.js?v=2026111111"></script>
 </body>
 </html>
