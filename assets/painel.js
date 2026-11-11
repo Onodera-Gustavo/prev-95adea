@@ -474,13 +474,6 @@
     ppt: '<svg viewBox="0 0 48 48" aria-hidden="true"><rect x="10" y="6" width="32" height="36" rx="3" fill="#fff" stroke="#D9CFBF" stroke-width="1.5"/><rect x="4" y="13" width="22" height="22" rx="3" fill="#B7472A"/><path d="M11 30V18h5a4 4 0 010 8h-5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linejoin="round"/><path d="M30 16h8M30 22h8M30 28h8" stroke="#D9CFBF" stroke-width="2" stroke-linecap="round"/></svg>'
   };
 
-  function renderAbas() {
-    $('#abas').innerHTML = FRENTES.map(function (f) {
-      return '<li><a href="#/' + f.id + '"' + (f.id === atual ? ' aria-current="page"' : '') + ' title="' + esc(f.nome) + '">' + (f.id === sessao ? '<span class="minha" aria-hidden="true"></span>' : '') + esc(f.curto) + (f.id === sessao ? '<span class="sr"> (sua área)</span>' : '') + '</a></li>';
-    }).join('');
-    var a = $('#abas a[aria-current]');
-    if (a && a.scrollIntoView) { var ul = $('#abas'), r = a.getBoundingClientRect(), ru = ul.getBoundingClientRect(); if (r.left < ru.left || r.right > ru.right) ul.scrollLeft += r.left - ru.left - 24; }
-  }
   function renderHero() {
     var f = frente(atual), its = daFrente(f.id), ult = its.map(function (i) { return i.atualizadoEm; }).sort(function (a, b) { return b.split('/').reverse().join('').localeCompare(a.split('/').reverse().join('')); })[0];
     $('#hero').innerHTML = '<div class="wrap"><div>' +
@@ -556,10 +549,12 @@
   }
   function render() {
     if (!sessao) { mostraLogin(); return; }
-    renderAbas(); renderHero(); renderBarra(); renderSubs(); renderGrade();
+    renderHero(); renderBarra(); renderSubs(); renderGrade();
   }
   function rota() {
-    var m = /^#\/([a-z]+)(?:\/([a-z0-9-]+))?/.exec(location.hash), id = m && frente(m[1]) ? m[1] : sessao;
+    /* cada coordenador só vê a própria área: para mudar de área, sai e entra com outra conta */
+    var m = /^#\/([a-z]+)(?:\/([a-z0-9-]+))?/.exec(location.hash), id = sessao;
+    if (m && m[1] !== sessao) { history.replaceState(null, '', location.pathname + location.search + '#/' + sessao); m = null; }
     var sid = m && id === m[1] && m[2] ? (m[2] === SEM || subValida(id, m[2]) ? m[2] : null) : null;
     if (id !== atual || sid !== atualSub) { termo = ''; $('#busca').value = ''; }
     atual = id; atualSub = sid;

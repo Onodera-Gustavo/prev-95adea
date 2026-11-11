@@ -81,28 +81,6 @@ body.pa{background:var(--cream);min-height:100vh;font-family:var(--sans)}
 }
 .pa-user__sair:hover{border-color:var(--gold-pale);color:var(--gold-pale)}
 
-.pa-abas{border-top:1px solid rgba(255,255,255,.08)}
-.pa-abas ul{
-  display:flex;list-style:none;gap:2px;overflow-x:auto;scrollbar-width:none;
-  margin:0 -10px;padding:0;
-}
-.pa-abas ul::-webkit-scrollbar{display:none}
-.pa-abas li{flex:none}
-.pa-abas a{
-  display:flex;align-items:center;gap:7px;position:relative;
-  padding:13px 10px 14px;color:#E4D2BC;font-size:.84rem;font-weight:500;letter-spacing:.01em;white-space:nowrap;
-  transition:color .3s var(--ease);
-}
-.pa-abas a::after{
-  content:"";position:absolute;left:10px;right:10px;bottom:0;height:2px;border-radius:2px 2px 0 0;
-  background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .45s var(--ease);
-}
-.pa-abas a:hover{color:#fff}
-.pa-abas a:hover::after{transform:scaleX(.5)}
-.pa-abas a[aria-current="page"]{color:#fff;font-weight:600}
-.pa-abas a[aria-current="page"]::after{transform:scaleX(1)}
-.pa-abas .minha{width:6px;height:6px;border-radius:50%;background:var(--gold);flex:none}
-@media (min-width:1300px){.pa-abas ul{justify-content:space-between}}
 
 /* ---------- faixa da frente ---------- */
 .pa-hero{padding:20px 0 0}
@@ -382,7 +360,6 @@ footer.pa-foot{padding:0;border-top:3px solid var(--gold)}
   .pa-head .pa-head__topo{height:56px;gap:10px}
   .pa-head .logo img{height:28px}
   .pa-user__txt{display:none}
-  .pa-abas ul{margin:0 -6px}
   .pa-hero{padding:24px 0 22px}
   .pa-grade{grid-template-columns:1fr}
   .pa-barra{gap:10px}
