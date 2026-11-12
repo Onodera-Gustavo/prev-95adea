@@ -209,15 +209,15 @@
       fim];
   }
   function rodapeSlide(x, f, n, tot, claro) {
-    x.font = '600 15px Montserrat'; x.fillStyle = claro ? 'rgba(235,220,201,.85)' : '#85672E';
+    x.font = '600 15px Montserrat'; x.fillStyle = claro ? 'rgba(188,190,192,.9)' : '#5F5E5E';
     x.textAlign = 'left'; x.fillText('M3BS  ·  ' + f.nome.toUpperCase(), 64, H - 40);
     x.textAlign = 'right'; x.fillText('EXEMPLO · CONTEÚDO FICTÍCIO     ' + dois(n + 1) + ' / ' + dois(tot), W - 64, H - 40);
     x.textAlign = 'left';
   }
   function fundoBordo(x) {
-    var g = x.createLinearGradient(0, 0, W, H); g.addColorStop(0, '#6B1F2A'); g.addColorStop(.6, '#4A1219'); g.addColorStop(1, '#2B0A0F');
+    var g = x.createLinearGradient(0, 0, W, H); g.addColorStop(0, '#790E17'); g.addColorStop(.6, '#5E0B12'); g.addColorStop(1, '#2A0508');
     x.fillStyle = g; x.fillRect(0, 0, W, H);
-    var r = x.createRadialGradient(W * .85, 0, 10, W * .85, 0, 620); r.addColorStop(0, 'rgba(139,42,58,.55)'); r.addColorStop(1, 'rgba(139,42,58,0)');
+    var r = x.createRadialGradient(W * .85, 0, 10, W * .85, 0, 620); r.addColorStop(0, 'rgba(154,39,49,.55)'); r.addColorStop(1, 'rgba(154,39,49,0)');
     x.fillStyle = r; x.fillRect(0, 0, W, H);
   }
   function desenhaExemplo(it, n, escala) {
@@ -227,43 +227,43 @@
       var x = c.getContext('2d'); x.scale(escala, escala); x.textBaseline = 'alphabetic';
       if (p.t === 'capa' || p.t === 'fim') {
         fundoBordo(x);
-        x.fillStyle = '#B69253'; x.fillRect(64, 64, 6, H - 128);
-        if (LOGO) x.drawImage(LOGO, W - 64 - 260, 76, 260, 260 * 107 / 874); /* logo oficial, versão horizontal clara */ else { x.font = '600 30px Montserrat'; x.fillStyle = '#E2CDA4'; x.textAlign = 'right'; x.fillText('M3BS', W - 64, 100); x.textAlign = 'left'; }
-        x.font = '600 18px Montserrat'; x.fillStyle = '#C9AB74'; x.fillText((f.nome + (it.sub && subNome(f.id, it.sub) ? '  ·  ' + subNome(f.id, it.sub) : '')).toUpperCase(), 104, 112);
+        x.fillStyle = '#BCBEC0'; x.fillRect(64, 64, 6, H - 128);
+        if (LOGO) x.drawImage(LOGO, W - 64 - 260, 76, 260, 260 * 107 / 874); /* logo oficial, versão horizontal clara */ else { x.font = '600 30px Montserrat'; x.fillStyle = '#F2F2F3'; x.textAlign = 'right'; x.fillText('M3BS', W - 64, 100); x.textAlign = 'left'; }
+        x.font = '600 18px Montserrat'; x.fillStyle = '#BCBEC0'; x.fillText((f.nome + (it.sub && subNome(f.id, it.sub) ? '  ·  ' + subNome(f.id, it.sub) : '')).toUpperCase(), 104, 112);
         if (p.t === 'capa') {
           x.font = '700 62px "EB Garamond"'; x.fillStyle = '#FFFFFF';
           var ls_ = quebra(x, it.titulo, W - 300).slice(0, 3), y0 = 330 - (ls_.length - 1) * 42;
           ls_.forEach(function (l, i) { x.fillText(l, 104, y0 + i * 84); });
-          x.fillStyle = '#B69253'; x.fillRect(104, y0 + ls_.length * 84 - 40, 72, 4);
-          x.font = '300 24px Montserrat'; x.fillStyle = '#EBDCC9'; x.fillText(coord(f) + '  ·  ' + it.criadoEm, 104, y0 + ls_.length * 84 + 14);
+          x.fillStyle = '#BCBEC0'; x.fillRect(104, y0 + ls_.length * 84 - 40, 72, 4);
+          x.font = '300 24px Montserrat'; x.fillStyle = '#E6E7E8'; x.fillText(coord(f) + '  ·  ' + it.criadoEm, 104, y0 + ls_.length * 84 + 14);
         } else {
           x.font = '700 72px "EB Garamond"'; x.fillStyle = '#FFFFFF'; x.fillText('Obrigado', 104, 340);
-          x.fillStyle = '#B69253'; x.fillRect(104, 372, 72, 4);
-          x.font = '300 26px Montserrat'; x.fillStyle = '#EBDCC9'; x.fillText('Dúvidas e próximos passos com a ' + coordMin(f) + '.', 104, 430);
+          x.fillStyle = '#BCBEC0'; x.fillRect(104, 372, 72, 4);
+          x.font = '300 26px Montserrat'; x.fillStyle = '#E6E7E8'; x.fillText('Dúvidas e próximos passos com a ' + coordMin(f) + '.', 104, 430);
         }
         rodapeSlide(x, f, n, pags.length, true);
       } else {
-        x.fillStyle = '#FAF7F2'; x.fillRect(0, 0, W, H);
-        x.fillStyle = '#6B1F2A'; x.fillRect(0, 0, 14, H);
-        x.font = '600 16px Montserrat'; x.fillStyle = '#85672E'; x.fillText(it.titulo.toUpperCase().slice(0, 70), 64, 82);
-        x.font = '700 46px "EB Garamond"'; x.fillStyle = '#6B1F2A'; x.fillText(p.tit, 64, 152);
-        x.fillStyle = '#B69253'; x.fillRect(64, 176, 56, 3);
+        x.fillStyle = '#F6F6F6'; x.fillRect(0, 0, W, H);
+        x.fillStyle = '#790E17'; x.fillRect(0, 0, 14, H);
+        x.font = '600 16px Montserrat'; x.fillStyle = '#790E17'; x.fillText(it.titulo.toUpperCase().slice(0, 70), 64, 82);
+        x.font = '700 46px "EB Garamond"'; x.fillStyle = '#790E17'; x.fillText(p.tit, 64, 152);
+        x.fillStyle = '#790E17'; x.fillRect(64, 176, 56, 3);
         if (p.t === 'lista') {
           p.itens.forEach(function (t, i) {
             var y = 250 + i * 92;
-            x.fillStyle = '#FFFFFF'; x.strokeStyle = '#E6E0D6'; x.lineWidth = 1.5; caixa(x, 64, y - 44, W - 128, 74, 12); x.fill(); x.stroke();
-            x.fillStyle = '#6B1F2A'; x.beginPath(); x.arc(108, y - 7, 20, 0, Math.PI * 2); x.fill();
+            x.fillStyle = '#FFFFFF'; x.strokeStyle = '#E0E0E0'; x.lineWidth = 1.5; caixa(x, 64, y - 44, W - 128, 74, 12); x.fill(); x.stroke();
+            x.fillStyle = '#790E17'; x.beginPath(); x.arc(108, y - 7, 20, 0, Math.PI * 2); x.fill();
             x.font = '600 18px Montserrat'; x.fillStyle = '#FFFFFF'; x.textAlign = 'center'; x.fillText(dois(i + 1), 108, y - 1); x.textAlign = 'left';
-            x.font = '300 26px Montserrat'; x.fillStyle = '#1F1B18'; x.fillText(t, 148, y + 2);
+            x.font = '300 26px Montserrat'; x.fillStyle = '#373636'; x.fillText(t, 148, y + 2);
           });
         } else {
           var lw = (W - 128 - 2 * 28) / 3;
           p.nums.forEach(function (nu, i) {
             var x0 = 64 + i * (lw + 28);
-            x.fillStyle = '#FFFFFF'; x.strokeStyle = '#E6E0D6'; x.lineWidth = 1.5; caixa(x, x0, 230, lw, 340, 14); x.fill(); x.stroke();
-            x.fillStyle = '#6B1F2A'; x.fillRect(x0, 230, lw, 6);
-            x.font = '700 96px "EB Garamond"'; x.fillStyle = '#6B1F2A'; x.fillText(nu[0], x0 + 36, 400);
-            x.font = '300 24px Montserrat'; x.fillStyle = '#544D47'; quebra(x, nu[1], lw - 72).forEach(function (l, j) { x.fillText(l, x0 + 36, 462 + j * 34); });
+            x.fillStyle = '#FFFFFF'; x.strokeStyle = '#E0E0E0'; x.lineWidth = 1.5; caixa(x, x0, 230, lw, 340, 14); x.fill(); x.stroke();
+            x.fillStyle = '#790E17'; x.fillRect(x0, 230, lw, 6);
+            x.font = '700 96px "EB Garamond"'; x.fillStyle = '#790E17'; x.fillText(nu[0], x0 + 36, 400);
+            x.font = '300 24px Montserrat'; x.fillStyle = '#5F5E5E'; quebra(x, nu[1], lw - 72).forEach(function (l, j) { x.fillText(l, x0 + 36, 462 + j * 34); });
           });
         }
         rodapeSlide(x, f, n, pags.length, false);
@@ -471,7 +471,7 @@
     baixa: '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     mais: '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="5" cy="12" r="1.8" fill="currentColor"/><circle cx="12" cy="12" r="1.8" fill="currentColor"/><circle cx="19" cy="12" r="1.8" fill="currentColor"/></svg>',
     alca: '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><g fill="currentColor"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></g></svg>',
-    ppt: '<svg viewBox="0 0 48 48" aria-hidden="true"><rect x="10" y="6" width="32" height="36" rx="3" fill="#fff" stroke="#D9CFBF" stroke-width="1.5"/><rect x="4" y="13" width="22" height="22" rx="3" fill="#B7472A"/><path d="M11 30V18h5a4 4 0 010 8h-5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linejoin="round"/><path d="M30 16h8M30 22h8M30 28h8" stroke="#D9CFBF" stroke-width="2" stroke-linecap="round"/></svg>'
+    ppt: '<svg viewBox="0 0 48 48" aria-hidden="true"><rect x="10" y="6" width="32" height="36" rx="3" fill="#fff" stroke="#D6D6D6" stroke-width="1.5"/><rect x="4" y="13" width="22" height="22" rx="3" fill="#B7472A"/><path d="M11 30V18h5a4 4 0 010 8h-5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linejoin="round"/><path d="M30 16h8M30 22h8M30 28h8" stroke="#D6D6D6" stroke-width="2" stroke-linecap="round"/></svg>'
   };
 
   function renderHero() {
