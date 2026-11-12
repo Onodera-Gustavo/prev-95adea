@@ -178,7 +178,7 @@
   var W = 1280, H = 720, LOGO = null, fontesProm = null;
   function fontes() {
     if (fontesProm) return fontesProm;
-    var lista = ['700 60px "Playfair Display"', '600 60px "Playfair Display"', '400 24px Inter', '600 24px Inter', '700 24px Inter'];
+    var lista = ['700 60px "EB Garamond"', '600 60px "EB Garamond"', '300 24px Montserrat', '600 24px Montserrat', '600 24px Montserrat'];
     fontesProm = Promise.all(lista.map(function (f) { return document.fonts && document.fonts.load ? document.fonts.load(f).catch(function () {}) : null; })).then(function () {
       if (!/^https?:/.test(location.protocol)) return; /* aberto do disco, a imagem sujaria o canvas */
       return new Promise(function (ok) { var im = new Image(); im.onload = function () { LOGO = im; ok(); }; im.onerror = function () { ok(); }; im.src = 'assets/img/marca/m3bs-horizontal-logo-claro.svg'; });
@@ -209,7 +209,7 @@
       fim];
   }
   function rodapeSlide(x, f, n, tot, claro) {
-    x.font = '600 15px Inter'; x.fillStyle = claro ? 'rgba(235,220,201,.85)' : '#85672E';
+    x.font = '600 15px Montserrat'; x.fillStyle = claro ? 'rgba(235,220,201,.85)' : '#85672E';
     x.textAlign = 'left'; x.fillText('M3BS  ·  ' + f.nome.toUpperCase(), 64, H - 40);
     x.textAlign = 'right'; x.fillText('EXEMPLO · CONTEÚDO FICTÍCIO     ' + dois(n + 1) + ' / ' + dois(tot), W - 64, H - 40);
     x.textAlign = 'left';
@@ -228,33 +228,33 @@
       if (p.t === 'capa' || p.t === 'fim') {
         fundoBordo(x);
         x.fillStyle = '#B69253'; x.fillRect(64, 64, 6, H - 128);
-        if (LOGO) x.drawImage(LOGO, W - 64 - 260, 76, 260, 260 * 107 / 874); /* logo oficial, versão horizontal clara */ else { x.font = '700 30px Inter'; x.fillStyle = '#E2CDA4'; x.textAlign = 'right'; x.fillText('M3BS', W - 64, 100); x.textAlign = 'left'; }
-        x.font = '600 18px Inter'; x.fillStyle = '#C9AB74'; x.fillText((f.nome + (it.sub && subNome(f.id, it.sub) ? '  ·  ' + subNome(f.id, it.sub) : '')).toUpperCase(), 104, 112);
+        if (LOGO) x.drawImage(LOGO, W - 64 - 260, 76, 260, 260 * 107 / 874); /* logo oficial, versão horizontal clara */ else { x.font = '600 30px Montserrat'; x.fillStyle = '#E2CDA4'; x.textAlign = 'right'; x.fillText('M3BS', W - 64, 100); x.textAlign = 'left'; }
+        x.font = '600 18px Montserrat'; x.fillStyle = '#C9AB74'; x.fillText((f.nome + (it.sub && subNome(f.id, it.sub) ? '  ·  ' + subNome(f.id, it.sub) : '')).toUpperCase(), 104, 112);
         if (p.t === 'capa') {
-          x.font = '700 62px "Playfair Display"'; x.fillStyle = '#FFFFFF';
+          x.font = '700 62px "EB Garamond"'; x.fillStyle = '#FFFFFF';
           var ls_ = quebra(x, it.titulo, W - 300).slice(0, 3), y0 = 330 - (ls_.length - 1) * 42;
           ls_.forEach(function (l, i) { x.fillText(l, 104, y0 + i * 84); });
           x.fillStyle = '#B69253'; x.fillRect(104, y0 + ls_.length * 84 - 40, 72, 4);
-          x.font = '400 24px Inter'; x.fillStyle = '#EBDCC9'; x.fillText(coord(f) + '  ·  ' + it.criadoEm, 104, y0 + ls_.length * 84 + 14);
+          x.font = '300 24px Montserrat'; x.fillStyle = '#EBDCC9'; x.fillText(coord(f) + '  ·  ' + it.criadoEm, 104, y0 + ls_.length * 84 + 14);
         } else {
-          x.font = '700 72px "Playfair Display"'; x.fillStyle = '#FFFFFF'; x.fillText('Obrigado', 104, 340);
+          x.font = '700 72px "EB Garamond"'; x.fillStyle = '#FFFFFF'; x.fillText('Obrigado', 104, 340);
           x.fillStyle = '#B69253'; x.fillRect(104, 372, 72, 4);
-          x.font = '400 26px Inter'; x.fillStyle = '#EBDCC9'; x.fillText('Dúvidas e próximos passos com a ' + coordMin(f) + '.', 104, 430);
+          x.font = '300 26px Montserrat'; x.fillStyle = '#EBDCC9'; x.fillText('Dúvidas e próximos passos com a ' + coordMin(f) + '.', 104, 430);
         }
         rodapeSlide(x, f, n, pags.length, true);
       } else {
         x.fillStyle = '#FAF7F2'; x.fillRect(0, 0, W, H);
         x.fillStyle = '#6B1F2A'; x.fillRect(0, 0, 14, H);
-        x.font = '600 16px Inter'; x.fillStyle = '#85672E'; x.fillText(it.titulo.toUpperCase().slice(0, 70), 64, 82);
-        x.font = '700 46px "Playfair Display"'; x.fillStyle = '#6B1F2A'; x.fillText(p.tit, 64, 152);
+        x.font = '600 16px Montserrat'; x.fillStyle = '#85672E'; x.fillText(it.titulo.toUpperCase().slice(0, 70), 64, 82);
+        x.font = '700 46px "EB Garamond"'; x.fillStyle = '#6B1F2A'; x.fillText(p.tit, 64, 152);
         x.fillStyle = '#B69253'; x.fillRect(64, 176, 56, 3);
         if (p.t === 'lista') {
           p.itens.forEach(function (t, i) {
             var y = 250 + i * 92;
             x.fillStyle = '#FFFFFF'; x.strokeStyle = '#E6E0D6'; x.lineWidth = 1.5; caixa(x, 64, y - 44, W - 128, 74, 12); x.fill(); x.stroke();
             x.fillStyle = '#6B1F2A'; x.beginPath(); x.arc(108, y - 7, 20, 0, Math.PI * 2); x.fill();
-            x.font = '700 18px Inter'; x.fillStyle = '#FFFFFF'; x.textAlign = 'center'; x.fillText(dois(i + 1), 108, y - 1); x.textAlign = 'left';
-            x.font = '400 26px Inter'; x.fillStyle = '#1F1B18'; x.fillText(t, 148, y + 2);
+            x.font = '600 18px Montserrat'; x.fillStyle = '#FFFFFF'; x.textAlign = 'center'; x.fillText(dois(i + 1), 108, y - 1); x.textAlign = 'left';
+            x.font = '300 26px Montserrat'; x.fillStyle = '#1F1B18'; x.fillText(t, 148, y + 2);
           });
         } else {
           var lw = (W - 128 - 2 * 28) / 3;
@@ -262,8 +262,8 @@
             var x0 = 64 + i * (lw + 28);
             x.fillStyle = '#FFFFFF'; x.strokeStyle = '#E6E0D6'; x.lineWidth = 1.5; caixa(x, x0, 230, lw, 340, 14); x.fill(); x.stroke();
             x.fillStyle = '#6B1F2A'; x.fillRect(x0, 230, lw, 6);
-            x.font = '700 96px "Playfair Display"'; x.fillStyle = '#6B1F2A'; x.fillText(nu[0], x0 + 36, 400);
-            x.font = '400 24px Inter'; x.fillStyle = '#544D47'; quebra(x, nu[1], lw - 72).forEach(function (l, j) { x.fillText(l, x0 + 36, 462 + j * 34); });
+            x.font = '700 96px "EB Garamond"'; x.fillStyle = '#6B1F2A'; x.fillText(nu[0], x0 + 36, 400);
+            x.font = '300 24px Montserrat'; x.fillStyle = '#544D47'; quebra(x, nu[1], lw - 72).forEach(function (l, j) { x.fillText(l, x0 + 36, 462 + j * 34); });
           });
         }
         rodapeSlide(x, f, n, pags.length, false);

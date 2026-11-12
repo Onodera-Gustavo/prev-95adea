@@ -4,13 +4,16 @@
    o que o painel precisa: entrada, abas por frente, cartões de
    apresentação, visor e diálogos.
    ============================================================ */
-/* tipografia do site atual da M3BS: Playfair Display nos títulos, Inter no texto */
+/* tipografia do manual de marca: EB Garamond 700 nos títulos, Montserrat no texto (300 corrido, 400 a 600 em rótulos e números, nunca acima de 600) */
 :root{
-  --serif:"Playfair Display", Georgia, "Times New Roman", serif;
-  --sans:"Inter", "Segoe UI", system-ui, sans-serif;
+  --serif:"EB Garamond", Georgia, "Times New Roman", serif;
+  --sans:"Montserrat", "Segoe UI", system-ui, sans-serif;
 }
-body.pa{background:var(--cream);min-height:100vh;font-family:var(--sans)}
-.pa .page-hero h1{font-weight:700;letter-spacing:-.005em}
+body.pa{background:var(--cream);min-height:100vh;font-family:var(--sans);font-weight:300}
+.pa h1,.pa h2,.pa h3,.pa h4{font-weight:700;font-style:normal}
+.pa em,.pa i{font-style:normal}
+.ap__meta,.pa-user__txt small{font-weight:400}	/* Montserrat 300 some em texto miúdo */
+.pa .page-hero h1,.pa .page-hero h1 .w b{font-weight:700;letter-spacing:0}
 .pa .page-hero .crumb,.pa-login__eyebrow{font-size:.7rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 [hidden]{display:none !important}
@@ -64,14 +67,14 @@ body.pa{background:var(--cream);min-height:100vh;font-family:var(--sans)}
 .pa-head .pa-head__topo{display:flex;align-items:center;gap:18px;height:62px}
 .pa-head .logo img{width:250px;height:auto}
 .pa-head__nome{
-  font-family:var(--serif);font-weight:600;font-size:1.12rem;color:var(--gold-pale);
+  font-family:var(--serif);font-weight:700;font-size:1.12rem;color:var(--gold-pale);
   margin-left:38px;padding-left:28px;border-left:1px solid rgba(182,146,83,.45);line-height:1.1;white-space:nowrap;
 }
 .pa-head__esp{flex:1}
 .pa-user{display:flex;align-items:center;gap:10px;color:#EBDCC9;min-width:0}
 .pa-user__av{
   width:34px;height:34px;border-radius:50%;flex:none;display:grid;place-items:center;
-  background:var(--gold);color:var(--burgundy-black);font-weight:700;font-size:.8rem;letter-spacing:.02em;
+  background:var(--gold);color:var(--burgundy-black);font-weight:600;font-size:.8rem;letter-spacing:.02em;
 }
 .pa-user__txt{display:flex;flex-direction:column;line-height:1.2;min-width:0}
 .pa-user__txt b{font-size:.86rem;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:28ch}
@@ -154,10 +157,10 @@ body.pa{background:var(--cream);min-height:100vh;font-family:var(--sans)}
 .ap:hover .ap__thumb::after,.ap__thumb:focus-visible::after{opacity:1;transform:none}
 .ap__ord{
   position:absolute;top:10px;left:10px;min-width:30px;height:26px;padding:0 8px;border-radius:999px;
-  display:grid;place-items:center;background:var(--burgundy);color:#fff;font:700 .76rem var(--sans);letter-spacing:.04em;
+  display:grid;place-items:center;background:var(--burgundy);color:#fff;font:600 .76rem var(--sans);letter-spacing:.04em;
 }
 .ap__tags{position:absolute;top:10px;right:10px;display:flex;gap:6px}
-.ap__tag{padding:3px 9px;border-radius:999px;font:700 .68rem var(--sans);letter-spacing:.06em;background:#fff;color:var(--ink);border:1px solid var(--line)}
+.ap__tag{padding:3px 9px;border-radius:999px;font:600 .68rem var(--sans);letter-spacing:.06em;background:#fff;color:var(--ink);border:1px solid var(--line)}
 .ap__tag--pdf{color:#9B1C1C}
 .ap__tag--ppt{color:#B7472A}
 .ap__tag--ex{background:var(--gold-pale);border-color:var(--gold-pale);color:var(--burgundy-black)}
@@ -169,7 +172,7 @@ body.pa{background:var(--cream);min-height:100vh;font-family:var(--sans)}
 .ap__carrega{width:100%;height:100%;background:linear-gradient(100deg,var(--cream-2) 30%,#fff 50%,var(--cream-2) 70%);background-size:300% 100%;animation:brilho 1.4s linear infinite}
 @keyframes brilho{to{background-position:-150% 0}}
 .ap__corpo{padding:14px 18px 14px;display:flex;flex-direction:column;gap:4px;flex:1}
-.ap__corpo h3{font-family:var(--serif);font-weight:600;font-size:1.08rem;line-height:1.3;color:var(--ink)}
+.ap__corpo h3{font-family:var(--serif);font-weight:700;font-size:1.08rem;line-height:1.3;color:var(--ink)}
 .ap__sub{font-size:.66rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-text,#85672E)}
 .ap__meta{font-size:.8rem;color:var(--ink-soft);line-height:1.5}
 .ap__acoes{display:flex;align-items:center;gap:8px;margin-top:auto;padding-top:8px}
@@ -299,7 +302,7 @@ footer.pa-foot{padding:0;border-top:3px solid var(--gold)}
   border:2px solid transparent;background:#2B0A0F;opacity:.6;transition:opacity .25s,border-color .25s;
 }
 .vs-mini img{width:100%;height:100%;object-fit:contain;background:#fff}
-.vs-mini span{position:absolute;left:4px;bottom:3px;font:700 .64rem var(--sans);color:#fff;background:rgba(43,10,15,.85);padding:1px 5px;border-radius:4px}
+.vs-mini span{position:absolute;left:4px;bottom:3px;font:600 .64rem var(--sans);color:#fff;background:rgba(43,10,15,.85);padding:1px 5px;border-radius:4px}
 .vs-mini:hover{opacity:.9}
 .vs-mini[aria-current="true"]{opacity:1;border-color:var(--gold)}
 .pa-visor__dica{position:absolute;left:50%;bottom:120px;transform:translateX(-50%);font-size:.8rem;color:#E4D2BC;background:rgba(26,6,9,.85);padding:8px 14px;border-radius:999px;opacity:0;transition:opacity .4s;pointer-events:none;white-space:nowrap}
