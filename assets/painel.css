@@ -37,7 +37,8 @@ body.pa{background:var(--cream);min-height:100vh;font-family:var(--sans)}
   opacity:0;transform:translateY(14px);animation:fadeup .8s var(--ease-out) .05s forwards;
 }
 @supports (backdrop-filter:blur(8px)){.pa-login__card{backdrop-filter:blur(8px)}}
-.pa-login__logo{height:52px;width:auto;margin:0 auto 26px}
+/* logo oficial (manual de marca): vertical no login com no mínimo 113 px de largura; horizontal no cabeçalho e rodapé com no mínimo 245 px */
+.pa-login__logo{width:160px;height:auto;margin:6px auto 40px}
 .pa-login__eyebrow{font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-soft);font-weight:600}
 .pa-login h1{font-family:var(--serif);font-weight:700;font-size:clamp(2rem,4.4vw,2.6rem);line-height:1.12;margin:10px 0 14px}
 .pa-login h1::after{content:"";display:block;width:56px;height:3px;background:var(--gold);border-radius:2px;margin:16px auto 0}
@@ -61,10 +62,10 @@ body.pa{background:var(--cream);min-height:100vh;font-family:var(--sans)}
 
 /* ---------- cabeçalho com as abas das frentes ---------- */
 .pa-head .pa-head__topo{display:flex;align-items:center;gap:18px;height:62px}
-.pa-head .logo img{height:34px;width:auto}
+.pa-head .logo img{width:250px;height:auto}
 .pa-head__nome{
   font-family:var(--serif);font-weight:600;font-size:1.12rem;color:var(--gold-pale);
-  padding-left:18px;border-left:1px solid rgba(182,146,83,.45);line-height:1.1;white-space:nowrap;
+  margin-left:38px;padding-left:28px;border-left:1px solid rgba(182,146,83,.45);line-height:1.1;white-space:nowrap;
 }
 .pa-head__esp{flex:1}
 .pa-user{display:flex;align-items:center;gap:10px;color:#EBDCC9;min-width:0}
@@ -257,7 +258,7 @@ body.pa{background:var(--cream);min-height:100vh;font-family:var(--sans)}
 /* ---------- rodapé ---------- */
 footer.pa-foot{padding:0;border-top:3px solid var(--gold)}
 .pa-foot__in{display:flex;align-items:center;gap:28px;padding-top:26px;padding-bottom:26px}
-.pa-foot__in img{height:34px;width:auto;flex:none}
+.pa-foot__in img{width:250px;height:auto;flex:none;margin-right:28px}
 .pa-foot__in p{font-size:.84rem;color:#D9C6AC;line-height:1.55;max-width:80ch}
 .pa-foot__in p b{color:#fff;font-weight:600}
 .pa-foot__bt{margin-left:auto;padding:10px 20px;font-size:.82rem;flex:none}
@@ -358,7 +359,7 @@ footer.pa-foot{padding:0;border-top:3px solid var(--gold)}
 }
 @media (max-width:640px){
   .pa-head .pa-head__topo{height:56px;gap:10px}
-  .pa-head .logo img{height:28px}
+  .pa-head .logo img{width:113px}
   .pa-user__txt{display:none}
   .pa-hero{padding:24px 0 22px}
   .pa-grade{grid-template-columns:1fr}

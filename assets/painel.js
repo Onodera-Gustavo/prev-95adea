@@ -181,7 +181,7 @@
     var lista = ['700 60px "Playfair Display"', '600 60px "Playfair Display"', '400 24px Inter', '600 24px Inter', '700 24px Inter'];
     fontesProm = Promise.all(lista.map(function (f) { return document.fonts && document.fonts.load ? document.fonts.load(f).catch(function () {}) : null; })).then(function () {
       if (!/^https?:/.test(location.protocol)) return; /* aberto do disco, a imagem sujaria o canvas */
-      return new Promise(function (ok) { var im = new Image(); im.onload = function () { LOGO = im; ok(); }; im.onerror = function () { ok(); }; im.src = 'assets/img/logo-m3bs-sigla-fundo-escuro.png'; });
+      return new Promise(function (ok) { var im = new Image(); im.onload = function () { LOGO = im; ok(); }; im.onerror = function () { ok(); }; im.src = 'assets/img/marca/m3bs-horizontal-logo-claro.svg'; });
     });
     return fontesProm;
   }
@@ -228,7 +228,7 @@
       if (p.t === 'capa' || p.t === 'fim') {
         fundoBordo(x);
         x.fillStyle = '#B69253'; x.fillRect(64, 64, 6, H - 128);
-        if (LOGO) x.drawImage(LOGO, W - 64 - 150, 60, 150, 72); else { x.font = '700 30px Inter'; x.fillStyle = '#E2CDA4'; x.textAlign = 'right'; x.fillText('M3BS', W - 64, 100); x.textAlign = 'left'; }
+        if (LOGO) x.drawImage(LOGO, W - 64 - 260, 76, 260, 260 * 107 / 874); /* logo oficial, versão horizontal clara */ else { x.font = '700 30px Inter'; x.fillStyle = '#E2CDA4'; x.textAlign = 'right'; x.fillText('M3BS', W - 64, 100); x.textAlign = 'left'; }
         x.font = '600 18px Inter'; x.fillStyle = '#C9AB74'; x.fillText((f.nome + (it.sub && subNome(f.id, it.sub) ? '  ·  ' + subNome(f.id, it.sub) : '')).toUpperCase(), 104, 112);
         if (p.t === 'capa') {
           x.font = '700 62px "Playfair Display"'; x.fillStyle = '#FFFFFF';
