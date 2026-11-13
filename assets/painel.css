@@ -333,7 +333,7 @@ footer.pa-foot{padding:0;border-top:3px solid var(--gold)}
 .pa-visor.cheia .pa-visor__barra,.pa-visor.cheia .pa-visor__minis{display:none}
 .pa-visor.cheia{background:#000}
 .pa-visor.cheia .pa-visor__palco{padding:0}
-.pa-visor.cheia .vs-pagina img{border-radius:0;box-shadow:none}
+.pa-visor.cheia .vs-pagina img{width:100%;height:100%;border-radius:0;box-shadow:none;background:transparent}	/* ocupa a tela toda, sem depender do tamanho da imagem */
 .pa-visor.cheia .vs-seta{position:absolute;top:50%;margin-top:-24px;opacity:0}
 .pa-visor.cheia .vs-seta--ant{left:16px}.pa-visor.cheia .vs-seta--prox{right:16px}
 .pa-visor.cheia.mexe .vs-seta{opacity:1}
